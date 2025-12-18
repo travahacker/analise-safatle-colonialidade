@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Curso Safatle — Colonialidade (distribuição de categorias)</title>
+    <style>
+      :root {
+        --bg: #0b0f14;
+        --panel: #121826;
+        --muted: #aab4c5;
+        --text: #e9eef8;
+        --accent: #f59e0b;
+        --border: rgba(255, 255, 255, 0.08);
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial;
+        background: var(--bg);
+        color: var(--text);
+      }
+      header {
+        padding: 20px 18px;
+        border-bottom: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(245, 158, 11, 0.12), rgba(245, 158, 11, 0.00));
+      }
+      header h1 {
+        margin: 0 0 6px 0;
+        font-size: 18px;
+        letter-spacing: 0.2px;
+      }
+      header p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.35;
+        max-width: 980px;
+      }
+      main {
+        padding: 18px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .controls {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin: 10px 0 18px 0;
+      }
+      .chip {
+        background: rgba(245, 158, 11, 0.12);
+        border: 1px solid rgba(245, 158, 11, 0.25);
+        color: var(--text);
+        padding: 8px 10px;
+        border-radius: 10px;
+        font-size: 13px;
+      }
+      select {
+        background: var(--panel);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+      @media (max-width: 900px) {
+        .grid { grid-template-columns: 1fr; }
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+      }
+      .card h2 {
+        margin: 0 0 10px 0;
+        font-size: 14px;
+        color: var(--text);
+      }
+      .note {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.4;
+        margin-top: 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+      th, td {
+        border-bottom: 1px solid var(--border);
+        padding: 10px 8px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+      }
+      th { color: var(--muted); font-weight: 600; }
+      .muted { color: var(--muted); }
+      .footer {
+        margin-top: 16px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+      }
+      code {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid var(--border);
+        padding: 1px 6px;
+        border-radius: 8px;
+      }
+      a { color: #93c5fd; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Curso Safatle — Colonialidade: referências (extraído de imagens)</h1>
+      <p>
+        Gráficos gerados a partir de <code>web/data/people.json</code> (OCR das imagens + enriquecimento via Wikidata/Wikipedia). Campos sensíveis só aparecem quando constam em fonte pública
+        (links no JSON/CSV); caso contrário ficam como <b>desconhecido</b>. Para <b>classe</b>, exibimos aqui um proxy transparente (<b>classe ocupacional</b>) baseado em ocupações públicas.
+      </p>
+    </header>
+
+    <main>
+      <div class="controls">
+        <span class="chip" id="summaryChip">Carregando…</span>
+        <label class="muted" for="weight">Peso:</label>
+        <select id="weight">
+          <option value="people" selected>Pessoas (cada pessoa = 1)</option>
+          <option value="mentions">Menções (pesa por ocorrências)</option>
+        </select>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h2>Raça / grupo étnico (Wikidata)</h2>
+          <canvas id="chartRaca" height="160"></canvas>
+        </div>
+        <div class="card">
+          <h2>Classe (ocupacional)</h2>
+          <canvas id="chartClasse" height="160"></canvas>
+        </div>
+        <div class="card">
+          <h2>Gênero</h2>
+          <canvas id="chartGenero" height="160"></canvas>
+        </div>
+        <div class="card">
+          <h2>Orientação sexual</h2>
+          <canvas id="chartOrientacao" height="160"></canvas>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 14px;">
+        <h2>Tabela (pessoas citadas)</h2>
+        <div class="note">
+          Dica: se você quiser preencher manualmente as categorias com base em fontes confiáveis/autoidentificação, edite o CSV em <code>data/derived/people.csv</code>
+          e depois recopie o JSON para <code>web/data/people.json</code>.
+        </div>
+        <div style="overflow-x:auto">
+          <table id="peopleTable">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Menções</th>
+                <th>Raça / grupo étnico</th>
+                <th>Classe (ocupacional)</th>
+                <th>Gênero</th>
+                <th>Orientação sexual</th>
+                <th>Imagens</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="footer">
+        Para abrir localmente: rode um servidor simples em <code>/workspace/web</code> (ex.: <code>python3 -m http.server 8000</code>) e acesse <code>http://localhost:8000</code>.
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
