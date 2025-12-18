@@ -122,8 +122,8 @@
     <header>
       <h1>Curso Safatle — Colonialidade: referências (extraído de imagens)</h1>
       <p>
-        Gráficos gerados a partir de <code>web/data/people.json</code> (OCR das imagens). As colunas de raça/classe/gênero/orientação sexual ficam como <b>desconhecido</b>
-        quando não há declaração explícita na própria fonte — para evitar inferência/atribuição indevida.
+        Gráficos gerados a partir de <code>web/data/people.json</code> (OCR das imagens + enriquecimento via Wikidata/Wikipedia). Campos sensíveis só aparecem quando constam em fonte pública
+        (links no JSON/CSV); caso contrário ficam como <b>desconhecido</b>. Para <b>classe</b>, exibimos aqui um proxy transparente (<b>classe ocupacional</b>) baseado em ocupações públicas.
       </p>
     </header>
 
@@ -139,11 +139,11 @@
 
       <div class="grid">
         <div class="card">
-          <h2>Raça</h2>
+          <h2>Raça / grupo étnico (Wikidata)</h2>
           <canvas id="chartRaca" height="160"></canvas>
         </div>
         <div class="card">
-          <h2>Classe</h2>
+          <h2>Classe (ocupacional)</h2>
           <canvas id="chartClasse" height="160"></canvas>
         </div>
         <div class="card">
@@ -168,8 +168,8 @@
               <tr>
                 <th>Nome</th>
                 <th>Menções</th>
-                <th>Raça</th>
-                <th>Classe</th>
+                <th>Raça / grupo étnico</th>
+                <th>Classe (ocupacional)</th>
                 <th>Gênero</th>
                 <th>Orientação sexual</th>
                 <th>Imagens</th>

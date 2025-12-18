@@ -89,7 +89,7 @@ function renderTable(people) {
     tdRaca.textContent = normalizeCategory(p.raca);
 
     const tdClasse = document.createElement('td');
-    tdClasse.textContent = normalizeCategory(p.classe);
+    tdClasse.textContent = normalizeCategory(p.classe_ocupacional || p.classe);
 
     const tdGenero = document.createElement('td');
     tdGenero.textContent = normalizeCategory(p.genero);
@@ -132,7 +132,7 @@ async function main() {
     const mode = weightSelect.value;
 
     const racaRows = countsBy(people, 'raca', mode);
-    const classeRows = countsBy(people, 'classe', mode);
+    const classeRows = countsBy(people, 'classe_ocupacional', mode);
     const generoRows = countsBy(people, 'genero', mode);
     const oriRows = countsBy(people, 'orientacao_sexual', mode);
 
@@ -143,8 +143,8 @@ async function main() {
       }
     }
 
-    charts.raca = makeBarChart(document.getElementById('chartRaca'), racaRows, 'Raça');
-    charts.classe = makeBarChart(document.getElementById('chartClasse'), classeRows, 'Classe');
+    charts.raca = makeBarChart(document.getElementById('chartRaca'), racaRows, 'Raça / grupo étnico');
+    charts.classe = makeBarChart(document.getElementById('chartClasse'), classeRows, 'Classe (ocupacional)');
     charts.genero = makeBarChart(document.getElementById('chartGenero'), generoRows, 'Gênero');
     charts.orientacao = makeBarChart(document.getElementById('chartOrientacao'), oriRows, 'Orientação sexual');
   }
